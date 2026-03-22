@@ -122,6 +122,10 @@
   height: 31px;
 }
 
+#browser .tabbar-wrapper #tabs-tabbar-container {
+  padding: 0;
+}
+
 #browser.tabs-off .tabbar-wrapper,
 #browser .tabbar-wrapper:has(.tab-strip > span:only-child) {
   height: 0;
