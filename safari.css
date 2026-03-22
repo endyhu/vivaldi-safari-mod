@@ -106,10 +106,7 @@
 
 /* Remove tab bar spacing */
 
-#browser .toolbar-tabbar-before {
-  display: none;
-}
-
+#browser .toolbar-tabbar-before,
 #browser .toolbar-tabbar-after {
   display: none;
 }
@@ -125,6 +122,7 @@
   height: 31px;
 }
 
+#browser.tabs-off .tabbar-wrapper,
 #browser .tabbar-wrapper:has(.tab-strip > span:only-child) {
   height: 0;
 }
@@ -133,6 +131,9 @@
   margin-top: 31px;
 }
 
+#browser.tabs-off .inner,
+#browser.fullscreen .inner,
+#browser:not(:has(footer .tabbar-wrapper)) .inner,
 #browser:has(.tab-strip > span:only-child) .inner {
   margin-top: 0;
 }
