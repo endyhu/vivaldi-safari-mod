@@ -104,6 +104,13 @@
   flex: initial;
 }
 
+/* Position alert count badge */
+
+#browser .tab-strip .tab-header .button-badge {
+  position: initial !important;
+  flex: initial;
+}
+
 /* Remove tab bar spacing */
 
 #browser .toolbar-tabbar-before,
