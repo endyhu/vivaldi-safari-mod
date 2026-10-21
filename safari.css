@@ -326,13 +326,18 @@
 /* TAB BAR: HIDDEN WITH ONE TAB
    Safari shows its tab bar only once a window has two tabs. Vivaldi has no
    setting that depends on the tab count ("Show Tab Bar" is all or nothing), so
-   the bar is hidden while the main strip holds a single tab. A stack puts its
-   tabs in #tabs-subcontainer, with the stack itself as the strip's one tab, so
-   the bar stays while one is open. The page grows into the freed height. */
-.tabbar-wrapper:has(#tabs-container .tab-strip > span:only-child):not(
+   the bar is hidden unless the main strip holds a second tab. Vivaldi
+   re-renders the strip empty for a moment whenever the tab count changes, so
+   the rule must hide on that empty state, not show on it, or the bar flashes.
+   A stack puts its tabs in #tabs-subcontainer, with the stack itself as the
+   strip's one tab, so the bar stays while one is open. The page grows into the
+   freed height. */
+.tabbar-wrapper:not(
+    :has(#tabs-container .tab-strip > span:nth-child(2)),
     :has(#tabs-subcontainer)
   ) {
-  display: none;
+  height: 0;
+  overflow: hidden;
 }
 
 /* PAGE CORNERS: SQUARE
