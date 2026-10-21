@@ -10,10 +10,14 @@
  * REQUIRED VIVALDI SETTINGS
  * Each entry: setting path → value (why CSS shouldn't do this instead).
  *
- * Settings → Tabs → Tab Bar Position → Top
- *   (Safari's "Separate" layout: tab bar on its own row below the toolbar.)
+ * Settings → Tabs → Tab Bar Position → Bottom
+ *   (Vivaldi then renders the tab bar in #footer, next to the toolbar and
+ *   bookmark bar, so CSS can reorder it without pixel offsets, and moves the
+ *   window buttons into the top toolbar.)
  * Settings → Address Bar → Address Bar Position → Top
- *   (The centered field lives in the navigation toolbar above the tabs.)
+ *   (The centered field lives in the navigation toolbar at the top.)
+ * Settings → Bookmarks → Bookmark Bar Position → Top
+ *   (With the bar shown, it sits directly below the address bar.)
  */
 
 /* CUSTOM PROPERTIES
@@ -75,4 +79,18 @@
    absolutely positioned at the right edge, so it is unaffected. */
 .bookmark-bar > .observer {
   justify-content: center;
+}
+
+/* TAB BAR: BELOW BOOKMARKS
+   Safari's Separate layout stacks the toolbar, favorites bar and tab bar above
+   the page. Vivaldi renders the tab bar in #footer, a sibling of #main (which
+   holds the toolbar, bookmark bar and page), so #main must stop being a box
+   for them to be ordered together. It carries no styling of its own. */
+#browser > #main {
+  display: contents;
+}
+
+/* The page goes last; the toolbar, bookmark bar and tab bar keep DOM order. */
+#main > .inner {
+  order: 1;
 }
