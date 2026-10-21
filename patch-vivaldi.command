@@ -5,7 +5,7 @@
 # An update replaces the app without the edit, so run this again after each one.
 #
 #   ./patch-vivaldi.command                apply to /Applications/Vivaldi.app
-#   ./patch-vivaldi.command --remove       undo the edit
+#   ./patch-vivaldi.command --remove       undo the edit (or run unpatch-vivaldi.command)
 #   ./patch-vivaldi.command --app PATH     use a Vivaldi.app somewhere else
 #
 # Restart Vivaldi afterwards: window.html is read when a window opens.

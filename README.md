@@ -79,7 +79,7 @@ In Terminal, from the repository folder:
 
 ```bash
 sh patch-vivaldi.command                         # patch /Applications/Vivaldi.app
-sh patch-vivaldi.command --remove                # undo the patch
+sh unpatch-vivaldi.command                       # undo the patch
 sh patch-vivaldi.command --app ~/Applications/Vivaldi.app   # Vivaldi installed elsewhere
 ```
 
@@ -89,7 +89,7 @@ command with `sudo`.
 
 Editing files inside Vivaldi.app invalidates the app's code signature, and how macOS
 reacts to that hasn't been checked. If Vivaldi refuses to start after patching, run
-the patch with `--remove` or reinstall Vivaldi.
+`unpatch-vivaldi.command` or reinstall Vivaldi.
 
 ## Known limitations
 
@@ -109,7 +109,7 @@ the patch with `--remove` or reinstall Vivaldi.
 
 Clear the folder under **Settings → Appearance → Custom UI Modifications**. If you
 installed the drag patch, double-click `unpatch-vivaldi.bat` on Windows, or run
-`sh patch-vivaldi.command --remove` on macOS. Then restart Vivaldi.
+`sh unpatch-vivaldi.command` on macOS. Then restart Vivaldi.
 
 ## License
 
