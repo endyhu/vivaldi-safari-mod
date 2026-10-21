@@ -30,6 +30,9 @@
   /* Not Safari-measured: room on both sides of a tab's title for the close
      button, kept symmetric so the title stays centered. */
   --tab-header-padding: 24px;
+  /* Not Safari-measured: gap between a tab's leading edge and its close
+     button. */
+  --tab-close-inset: 8px;
 }
 
 /* ADDRESS BAR: CENTERED
@@ -149,5 +152,5 @@
    of the flow so showing it doesn't shift the title. */
 .tab .tab-header .close {
   position: absolute;
-  inset-inline-start: 0;
+  inset-inline-start: var(--tab-close-inset);
 }
