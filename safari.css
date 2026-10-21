@@ -69,3 +69,10 @@
   max-width: 100%;
   margin-inline: auto;
 }
+
+/* BOOKMARK BAR: CENTERED
+   Safari centers its favorites on the window. The overflow chevron is
+   absolutely positioned at the right edge, so it is unaffected. */
+.bookmark-bar > .observer {
+  justify-content: center;
+}
