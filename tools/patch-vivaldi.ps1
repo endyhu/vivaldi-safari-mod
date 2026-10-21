@@ -8,7 +8,8 @@
 #   .\tools\patch-vivaldi.ps1 -Remove               undo the edit
 #   .\tools\patch-vivaldi.ps1 -Remove -Unregister   undo the edit and remove the task
 #
-# patch-vivaldi.bat in the repo root runs this script with the same arguments.
+# patch-vivaldi.bat in the repo root runs this script with the same arguments, and
+# unpatch-vivaldi.bat runs it with -Remove -Unregister.
 # patch-vivaldi.command is the macOS equivalent.
 #
 # Restart Vivaldi afterwards: window.html is read when a window opens.

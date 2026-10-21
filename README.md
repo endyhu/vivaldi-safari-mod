@@ -61,12 +61,14 @@ again after each update. Restart Vivaldi after patching.
 ### Windows
 
 Double-click **`patch-vivaldi.bat`** (requires [PowerShell 7](https://aka.ms/powershell)).
-To have it re-apply itself after updates, or to undo it:
+To undo it, double-click **`unpatch-vivaldi.bat`**. To have the patch re-apply itself
+after updates:
 
 ```powershell
-.\tools\patch-vivaldi.ps1 -Register             # also re-apply at logon and every 15 minutes
-.\tools\patch-vivaldi.ps1 -Remove -Unregister   # undo the patch and remove the task
+.\tools\patch-vivaldi.ps1 -Register   # also re-apply at logon and every 15 minutes
 ```
+
+`unpatch-vivaldi.bat` removes that scheduled task too.
 
 The script patches the per-user install in `%LOCALAPPDATA%\Vivaldi\Application`.
 For a system-wide install, pass `-ApplicationDir` and run it as administrator.
@@ -106,9 +108,8 @@ the patch with `--remove` or reinstall Vivaldi.
 ## Uninstall
 
 Clear the folder under **Settings → Appearance → Custom UI Modifications**. If you
-installed the drag patch, run `patch-vivaldi.bat -Remove` (adding `-Unregister` if you
-registered the scheduled task) on Windows, or `sh patch-vivaldi.command --remove` on
-macOS. Then restart Vivaldi.
+installed the drag patch, double-click `unpatch-vivaldi.bat` on Windows, or run
+`sh patch-vivaldi.command --remove` on macOS. Then restart Vivaldi.
 
 ## License
 
