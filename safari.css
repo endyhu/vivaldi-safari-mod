@@ -18,6 +18,10 @@
  *   (The centered field lives in the navigation toolbar at the top.)
  * Settings → Bookmarks → Bookmark Bar Position → Top
  *   (With the bar shown, it sits directly below the address bar.)
+ * Settings → Tabs → Tab Bar → Remove Tab Spacing in Maximized Windows → On
+ *   (Drops the 6px Vivaldi pads above and below the tabs while the window is
+ *   maximized. The padding is a theme variable tied to this setting, so CSS
+ *   would have to fight it.)
  */
 
 /* CUSTOM PROPERTIES
@@ -236,6 +240,26 @@
   position-anchor: --tab-favicon;
   inset: anchor(top) auto auto anchor(right);
   translate: var(--tab-badge-offset);
+}
+
+/* TAB BAR: NO SIDE GUTTERS
+   Vivaldi reserves 6px at each end of the bar for the toolbars before and after
+   the tabs, even when they hold no buttons, so tabs stop short of the window
+   edges. Without a minimum they take only the width of their buttons. Vivaldi's
+   rule for the empty toolbars is outranked by the :is() and the #browser
+   prefix, which also exempts toolbar edit mode, where the empty toolbars must
+   stay wide enough to drop buttons on. */
+#browser:not(.toolbar-edit-mode)
+  #tabs-tabbar-container
+  :is(.toolbar-tabbar-before, .toolbar-tabbar-after):empty {
+  min-width: 0;
+}
+
+/* The tab area also keeps a 3px margin on its right, as a gap before the
+   toolbar after it. With nothing in that toolbar it is only a gutter. #browser
+   outranks Vivaldi's .tabs-bottom rule. */
+#browser #tabs-container .resize:has(+ .toolbar-tabbar-after:empty) {
+  margin-inline-end: 0;
 }
 
 /* PAGE CORNERS: SQUARE
