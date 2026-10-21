@@ -323,6 +323,18 @@
   margin-inline-end: 0;
 }
 
+/* TAB BAR: HIDDEN WITH ONE TAB
+   Safari shows its tab bar only once a window has two tabs. Vivaldi has no
+   setting that depends on the tab count ("Show Tab Bar" is all or nothing), so
+   the bar is hidden while the main strip holds a single tab. A stack puts its
+   tabs in #tabs-subcontainer, with the stack itself as the strip's one tab, so
+   the bar stays while one is open. The page grows into the freed height. */
+.tabbar-wrapper:has(#tabs-container .tab-strip > span:only-child):not(
+    :has(#tabs-subcontainer)
+  ) {
+  display: none;
+}
+
 /* PAGE CORNERS: SQUARE
    Vivaldi rounds the page's corners by painting the browser background over
    them through an inverse-rounded mask, on #webpage-stack::after (and on each
