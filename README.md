@@ -26,7 +26,7 @@ macOS one hasn't been tested on a real Mac yet.
 1. Open `vivaldi://experiments` and enable **Allow for using CSS modifications**.
 2. Clone or download this repository.
 3. In **Settings → Appearance → Custom UI Modifications**, select the repository
-   folder (the one containing `safari.css`).
+   folder (the one containing `safari.css`, not `drag-patch`).
 4. Change the settings below, then restart Vivaldi. Vivaldi reads the CSS only at
    startup.
 
@@ -60,12 +60,12 @@ again after each update. Restart Vivaldi after patching.
 
 ### Windows
 
-Double-click **`patch-vivaldi.bat`** (requires [PowerShell 7](https://aka.ms/powershell)).
-To undo it, double-click **`unpatch-vivaldi.bat`**. To have the patch re-apply itself
-after updates:
+In the `drag-patch` folder, double-click **`patch-vivaldi.bat`** (requires
+[PowerShell 7](https://aka.ms/powershell)). To undo it, double-click
+**`unpatch-vivaldi.bat`**. To have the patch re-apply itself after updates:
 
 ```powershell
-.\tools\patch-vivaldi.ps1 -Register   # also re-apply at logon and every 15 minutes
+.\drag-patch\patch-vivaldi.ps1 -Register   # also re-apply at logon and every 15 minutes
 ```
 
 `unpatch-vivaldi.bat` removes that scheduled task too.
@@ -78,9 +78,9 @@ For a system-wide install, pass `-ApplicationDir` and run it as administrator.
 In Terminal, from the repository folder:
 
 ```bash
-sh patch-vivaldi.command                         # patch /Applications/Vivaldi.app
-sh unpatch-vivaldi.command                       # undo the patch
-sh patch-vivaldi.command --app ~/Applications/Vivaldi.app   # Vivaldi installed elsewhere
+sh drag-patch/patch-vivaldi.command     # patch /Applications/Vivaldi.app
+sh drag-patch/unpatch-vivaldi.command   # undo the patch
+sh drag-patch/patch-vivaldi.command --app ~/Applications/Vivaldi.app   # Vivaldi installed elsewhere
 ```
 
 Running it with `sh` avoids the Gatekeeper prompt that double-clicking a downloaded
@@ -108,8 +108,8 @@ reacts to that hasn't been checked. If Vivaldi refuses to start after patching, 
 ## Uninstall
 
 Clear the folder under **Settings → Appearance → Custom UI Modifications**. If you
-installed the drag patch, double-click `unpatch-vivaldi.bat` on Windows, or run
-`sh unpatch-vivaldi.command` on macOS. Then restart Vivaldi.
+installed the drag patch, double-click `drag-patch\unpatch-vivaldi.bat` on Windows, or
+run `sh drag-patch/unpatch-vivaldi.command` on macOS. Then restart Vivaldi.
 
 ## License
 

@@ -3,12 +3,12 @@
 # folder. An update installs a fresh version folder without the edit, so run this
 # again after each update, or register it to run on its own:
 #
-#   .\tools\patch-vivaldi.ps1                       apply to every installed Vivaldi version
-#   .\tools\patch-vivaldi.ps1 -Register             also re-apply at logon and every 15 minutes
-#   .\tools\patch-vivaldi.ps1 -Remove               undo the edit
-#   .\tools\patch-vivaldi.ps1 -Remove -Unregister   undo the edit and remove the task
+#   .\patch-vivaldi.ps1                       apply to every installed Vivaldi version
+#   .\patch-vivaldi.ps1 -Register             also re-apply at logon and every 15 minutes
+#   .\patch-vivaldi.ps1 -Remove               undo the edit
+#   .\patch-vivaldi.ps1 -Remove -Unregister   undo the edit and remove the task
 #
-# patch-vivaldi.bat in the repo root runs this script with the same arguments, and
+# patch-vivaldi.bat runs this script with the same arguments, and
 # unpatch-vivaldi.bat runs it with -Remove -Unregister.
 # patch-vivaldi.command is the macOS equivalent.
 #
@@ -22,7 +22,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$script = Join-Path $PSScriptRoot '..\safari-drag.js' | Resolve-Path
+$script = Join-Path $PSScriptRoot 'safari-drag.js' | Resolve-Path
 $taskName = 'Vivaldi safari-drag patch'
 # Marks the line this script added, so it can find and remove exactly that line.
 $tag = '<script src="safari-drag.js"></script><!-- safari-mod -->'
