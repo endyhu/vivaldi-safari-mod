@@ -3,8 +3,9 @@
    Vivaldi lays tabs out in its own model (180px per tab) and hit-tests a drag
    by comparing the cursor to that model. safari.css stretches the tabs to fill
    the bar, so the cursor and the model disagree. This script translates the
-   cursor from screen space into model space while a tab is held, and draws the
-   held tab under the real cursor. Vivaldi's own drag code does everything else
+   cursor from screen space into model space while a tab is held, draws the held
+   tab under the real cursor, and narrows the zone where a pause stacks tabs so
+   reordering takes less travel. Vivaldi's own drag code does everything else
    (reordering, detaching, stacking). Horizontal tab bars only.
 
    It is not a Vivaldi mod: Vivaldi cannot load JavaScript from the CSS mods
@@ -17,6 +18,16 @@
   const OVERSHOOT = 5;
   // Vivaldi starts a drag after the cursor moves more than this many model pixels.
   const DRAG_THRESHOLD = 5;
+  // Vivaldi's stacking zone (bundle.js, kMe and NMe): a held tab covering between
+  // these shares of another tab stacks onto it after a pause; covering more
+  // reorders.
+  const STACK_MIN = 0.15;
+  const STACK_MAX = 0.85;
+  // Chosen by eye (Safari has no stacks): the width of the band, in screen pixels
+  // and centered on half coverage, where a pause stacks. On narrow tabs it is
+  // capped at this share of the tab.
+  const STACK_BAND = 40;
+  const STACK_BAND_MAX = 0.3;
 
   let drag = null;
 
@@ -70,14 +81,60 @@
   function render() {
     drag.frame = requestAnimationFrame(render);
     if (!drag.started) return;
+    const { slot, left } = heldPosition();
+    drag.tx = left - slot;
+    drag.tab.style.transform = `translateX(${drag.tx}px)`;
+  }
+
+  // The held tab's flex slot and where it is drawn: under the cursor, within the bar.
+  function heldPosition() {
     const { tab, strip, grab, x } = drag;
     const slot = tab.getBoundingClientRect().left - drag.tx;
     const tabs = [...strip.querySelectorAll('.tab-position')];
     const lefts = tabs.map((t) => t === tab ? slot : t.getBoundingClientRect().left);
     const min = Math.min(...lefts) - OVERSHOOT;
     const max = Math.max(...lefts) + OVERSHOOT;
-    drag.tx = Math.min(Math.max(x - grab, min), max) - slot;
-    tab.style.transform = `translateX(${drag.tx}px)`;
+    return { slot, left: Math.min(Math.max(x - grab, min), max) };
+  }
+
+  /* Vivaldi's zones scale with the tab, so on wide tabs most of a neighbour is a
+     stack zone and a reorder takes nearly a whole tab of travel. Instead, the
+     held tab's screen coverage of the tab it overlaps most is remapped: below a
+     narrow band at half coverage nothing happens, a pause inside it stacks, and
+     past it the tabs swap. After a swap the held tab covers less than half of
+     the tab it passed, below the band, so it can't swap back or stack there.
+     The result is the model cursor x that gives Vivaldi that coverage, or null
+     when pinned tabs are involved or nothing is covered; the linear map handles
+     those. */
+  function zoneModelX() {
+    const { tab, strip } = drag;
+    if (Number.isNaN(drag.modelGrab) || tab.querySelector('.tab.pinned')) return null;
+    const { slot, left } = heldPosition();
+    const width = tab.getBoundingClientRect().width;
+    let target = null;
+    let rect = null;
+    let cover = 0;
+    for (const t of strip.querySelectorAll('.tab-position')) {
+      if (t === tab || t.querySelector('.tab.pinned')) continue;
+      const r = t.getBoundingClientRect();
+      const c = (Math.min(left + width, r.right) - Math.max(left, r.left)) / r.width;
+      if (c > cover) [target, rect, cover] = [t, r, c];
+    }
+    if (!target) return null;
+    const targetX = modelValue(target, '--PositionX');
+    const targetWidth = modelValue(target, '--Width');
+    if (Number.isNaN(targetX) || Number.isNaN(targetWidth)) return null;
+    const halfBand = Math.min(STACK_BAND / rect.width, STACK_BAND_MAX) / 2;
+    const low = 0.5 - halfBand;
+    const high = 0.5 + halfBand;
+    let modelCover;
+    if (cover < low) modelCover = STACK_MIN * (cover / low);
+    else if (cover <= high) modelCover = STACK_MIN + (STACK_MAX - STACK_MIN) * ((cover - low) / (high - low));
+    else modelCover = STACK_MAX + (1 - STACK_MAX) * ((cover - high) / (1 - high));
+    const modelLeft = slot < rect.left
+      ? targetX + modelCover * targetWidth - drag.modelWidth
+      : targetX + (1 - modelCover) * targetWidth;
+    return modelLeft + drag.modelGrab;
   }
 
   function endDrag() {
@@ -93,9 +150,12 @@
     if (!tab) return;
     endDrag();
     const toModel = buildMap(tab.closest('.tab-strip'));
+    const startModelX = toModel(e.clientX);
     drag = {
       tab, strip: tab.closest('.tab-strip'), toModel,
-      startX: e.clientX, startModelX: toModel(e.clientX), grab: e.clientX - tab.getBoundingClientRect().left,
+      startX: e.clientX, startModelX, grab: e.clientX - tab.getBoundingClientRect().left,
+      // Vivaldi keeps the cursor's offset into the held tab's model box fixed.
+      modelGrab: startModelX - modelValue(tab, '--PositionX'), modelWidth: modelValue(tab, '--Width'),
       x: e.clientX, tx: 0, started: false, frame: 0,
     };
     // Vivaldi prevents the default on the event it handles; the original needs it too.
@@ -111,9 +171,10 @@
   window.addEventListener('mousemove', (e) => {
     if (!drag || !e.isTrusted) return;
     if (!(e.buttons & 1)) return endDrag();
-    const modelX = drag.toModel(e.clientX);
+    let modelX = drag.toModel(e.clientX);
     drag.x = e.clientX;
     if (Math.abs(modelX - drag.startModelX) > DRAG_THRESHOLD) drag.started = true;
+    if (drag.started) modelX = zoneModelX() ?? modelX;
     e.stopImmediatePropagation();
     e.target.dispatchEvent(retarget(e, modelX));
     if (!drag.frame) render();

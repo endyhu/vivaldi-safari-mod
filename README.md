@@ -49,6 +49,11 @@ Vivaldi positions tabs in its own model of fixed 180px tabs, which CSS can't cha
 With the equal-width tabs, dragging a tab drops it in the wrong slot. `safari-drag.js`
 fixes this by translating the cursor into Vivaldi's model while a tab is held.
 
+It also makes stacking by drag deliberate. A dragged tab swaps places once it covers
+about half of its neighbor. To stack it onto that tab instead, pause at the halfway
+point until the target highlights, then release. Passing through without pausing
+never stacks.
+
 Vivaldi can't load JavaScript from the mods folder, so the script has to be added to
 Vivaldi's own `window.html`. A Vivaldi update replaces that file, so run the patch
 again after each update. Restart Vivaldi after patching.
