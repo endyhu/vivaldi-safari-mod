@@ -114,11 +114,23 @@
 
 /* Vivaldi sizes the tab area to the sum of its tabs, writing the limit inline
    (max-width: 180px for one tab). !important is needed to beat that inline
-   style. The stack sub-strip gets the same treatment so a stack's tabs also
-   fill the bar. */
-:is(#tabs-container, #tabs-subcontainer) .resize {
+   style. */
+#tabs-container .resize {
   max-width: none !important;
   min-width: 0;
+}
+
+/* A stack's sub-strip has no .resize wrapper: its tab strip carries the inline
+   width itself (360px for two tabs) and doesn't grow, so it is released the
+   same way. !important is needed to beat the inline style. Its trailing
+   toolbar stops growing so the strip gets the rest of the row. */
+#tabs-subcontainer > .tab-strip {
+  flex: 1 1 0;
+  width: auto !important;
+}
+
+#tabs-subcontainer > .toolbar-tabbar {
+  flex: 0 0 auto;
 }
 
 /* Without min-width: 0 the strip never shrinks below its tabs' content width
