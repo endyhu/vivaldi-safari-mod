@@ -145,8 +145,9 @@
   text-overflow: ellipsis;
 }
 
-/* Taken out of the flow so showing it on hover doesn't shift the title. */
+/* Safari shows the close button at the leading edge on hover. It is taken out
+   of the flow so showing it doesn't shift the title. */
 .tab .tab-header .close {
   position: absolute;
-  inset-inline-end: 0;
+  inset-inline-start: 0;
 }
