@@ -18,10 +18,6 @@
  *   (The centered field lives in the navigation toolbar at the top.)
  * Settings → Bookmarks → Bookmark Bar Position → Top
  *   (With the bar shown, it sits directly below the address bar.)
- * Settings → Tabs → Tab Bar → Remove Tab Spacing in Maximized Windows → On
- *   (Drops the 6px Vivaldi pads above and below the tabs while the window is
- *   maximized. The padding is a theme variable tied to this setting, so CSS
- *   would have to fight it.)
  */
 
 /* CUSTOM PROPERTIES
@@ -240,6 +236,16 @@
   position-anchor: --tab-favicon;
   inset: anchor(top) auto auto anchor(right);
   translate: var(--tab-badge-offset);
+}
+
+/* TAB BAR: NO PADDING
+   Vivaldi pads the tab bar by 6px (above and below, depending on the tab bar's
+   position) unless its "Remove Tab Spacing in Maximized Windows" setting is on
+   and the window is maximized. That setting is not used, because the spacing
+   would return whenever the window is restored. The class list matches the
+   specificity of Vivaldi's .density-on rule, and this section comes later. */
+#browser.tabs-bottom.density-on #tabs-tabbar-container.bottom {
+  padding: 0;
 }
 
 /* TAB BAR: NO SIDE GUTTERS
