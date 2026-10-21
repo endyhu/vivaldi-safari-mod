@@ -38,6 +38,14 @@
   /* Not Safari-measured: shifts the alert badge so it is centered on the
      favicon's top-right corner without being clipped by the tab's top edge. */
   --tab-badge-offset: -50% -35%;
+  /* Not Safari-measured: the hairline between two inactive tabs. */
+  --tab-separator-width: 1px;
+  /* Not Safari-measured: Safari's divider is a short hairline, not full height. */
+  --tab-separator-height: 50%;
+  /* Chosen by eye: visible on a dark tab bar without competing with titles.
+     The theme's own faded foreground variables were too bright (the fully
+     opaque one) or too faint (the alpha one, 10%). */
+  --tab-separator-opacity: 30%;
 }
 
 /* ADDRESS BAR: CENTERED
@@ -250,6 +258,33 @@
 #browser .tab-strip > span:not(:last-child) .tab {
   border-start-end-radius: 0;
   border-end-end-radius: 0;
+}
+
+/* TABS: SEPARATORS
+   With square corners, neighbouring inactive tabs read as one block. A hairline
+   on each tab's leading edge, except the first, divides them. Safari hides a
+   divider next to the active or hovered tab, whose fill already marks the edge,
+   so it is hidden when either tab beside it is active or hovered. The tab clips
+   its content, so the line is drawn inside it. */
+#browser .tab-strip > span:not(:first-child) .tab::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  margin-block: auto;
+  width: var(--tab-separator-width);
+  height: var(--tab-separator-height);
+  background-color: color-mix(
+    in srgb,
+    var(--colorFg) var(--tab-separator-opacity),
+    transparent
+  );
+  pointer-events: none;
+}
+
+#browser .tab-strip > span .tab:is(.active, :hover)::before,
+#browser .tab-strip > span:has(.tab:is(.active, :hover)) + span .tab::before {
+  display: none;
 }
 
 /* TAB BAR: NO PADDING
