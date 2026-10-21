@@ -238,6 +238,20 @@
   translate: var(--tab-badge-offset);
 }
 
+/* TABS: JOINED
+   Safari's tabs sit side by side, with square corners where two meet. Each tab
+   sits in its own span, so a tab's neighbours are found on that span. Vivaldi
+   rounds every corner with a four-class rule; the #browser ID outranks it. */
+#browser .tab-strip > span:not(:first-child) .tab {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+#browser .tab-strip > span:not(:last-child) .tab {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
 /* TAB BAR: NO PADDING
    Vivaldi pads the tab bar by 6px (above and below, depending on the tab bar's
    position) unless its "Remove Tab Spacing in Maximized Windows" setting is on
