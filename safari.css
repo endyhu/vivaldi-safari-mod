@@ -212,3 +212,14 @@
   inset: anchor(top) auto auto anchor(right);
   translate: var(--tab-badge-offset);
 }
+
+/* PAGE CORNERS: SQUARE
+   Vivaldi rounds the page's corners by painting the browser background over
+   them through an inverse-rounded mask, on #webpage-stack::after (and on each
+   tiled page). The radius is the theme's global Corner Rounding, which also
+   rounds the tabs and fields, so the overlay is hidden rather than that
+   setting lowered. */
+#webpage-stack::after,
+#webpage-stack .webpageview.tiled::after {
+  display: none;
+}
