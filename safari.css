@@ -260,12 +260,18 @@
   border-end-end-radius: 0;
 }
 
+/* Safari rounds a tab again while the pointer is over it. Vivaldi's own radius
+   comes back, and this rule must stay after the two above to win the tie. */
+#browser .tab-strip > span .tab:hover {
+  border-radius: var(--currentRadius);
+}
+
 /* TABS: SEPARATORS
    With square corners, neighbouring inactive tabs read as one block. A hairline
    on each tab's leading edge, except the first, divides them. Safari hides a
-   divider next to the active tab, whose fill already marks the edge, so it is
-   hidden when either tab beside it is active. Hovering keeps the lines. The tab
-   clips its content, so the line is drawn inside it. */
+   divider next to the active or hovered tab, whose fill already marks the edge,
+   so it is hidden when either tab beside it is active or hovered. The tab clips
+   its content, so the line is drawn inside it. */
 #browser .tab-strip > span:not(:first-child) .tab::before {
   content: "";
   position: absolute;
@@ -282,8 +288,8 @@
   pointer-events: none;
 }
 
-#browser .tab-strip > span .tab.active::before,
-#browser .tab-strip > span:has(.tab.active) + span .tab::before {
+#browser .tab-strip > span .tab:is(.active, :hover)::before,
+#browser .tab-strip > span:has(.tab:is(.active, :hover)) + span .tab::before {
   display: none;
 }
 
