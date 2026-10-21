@@ -3,12 +3,13 @@
 # folder. An update installs a fresh version folder without the edit, so run this
 # again after each update, or register it to run on its own:
 #
-#   .\tools\install-drag.ps1              apply to every installed Vivaldi version
-#   .\tools\install-drag.ps1 -Register    also re-apply at logon and every 15 minutes
-#   .\tools\install-drag.ps1 -Remove      undo the edit
-#   .\tools\install-drag.ps1 -Remove -Unregister   undo the edit and remove the task
+#   .\tools\patch-vivaldi.ps1                       apply to every installed Vivaldi version
+#   .\tools\patch-vivaldi.ps1 -Register             also re-apply at logon and every 15 minutes
+#   .\tools\patch-vivaldi.ps1 -Remove               undo the edit
+#   .\tools\patch-vivaldi.ps1 -Remove -Unregister   undo the edit and remove the task
 #
-# install-drag.bat in the repo root runs this script with the same arguments.
+# patch-vivaldi.bat in the repo root runs this script with the same arguments.
+# patch-vivaldi.command is the macOS equivalent.
 #
 # Restart Vivaldi afterwards: window.html is read when a window opens.
 

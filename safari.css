@@ -127,9 +127,9 @@
    Safari's tabs split the whole bar equally, with each title centered.
    Vivaldi's script still places tabs in its own model of 180px-wide tabs, which
    CSS can't change. Dragging a tab would hit-test against that model, so
-   safari-drag.js (installed by tools/install-drag.ps1) translates the cursor
-   into it and draws the dragged tab itself. Without the patch, dragging
-   drops tabs in the wrong slot. */
+   safari-drag.js (installed by patch-vivaldi.bat or patch-vivaldi.command)
+   translates the cursor into it and draws the dragged tab itself. Without the
+   patch, dragging drops tabs in the wrong slot. */
 
 /* Vivaldi sizes the tab area to the sum of its tabs, writing the limit inline
    (max-width: 180px for one tab). !important is needed to beat that inline

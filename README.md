@@ -5,7 +5,8 @@ macOS: a centered address bar, centered favorites, and a Safari-style tab bar be
 them.
 
 Built and tested on Vivaldi 8.2.4133.89 on Windows 11. The CSS should work on any
-platform; the optional tab-drag patch is Windows-only.
+platform. The optional tab-drag patch has installers for Windows and macOS; the
+macOS one hasn't been tested on a real Mac yet.
 
 ## Features
 
@@ -42,26 +43,46 @@ Leave these **off**, since the CSS handles them itself:
 - Settings → Tabs → **Display Close Button → On Left Side** (it would replace the favicon)
 - Settings → Tabs → **Remove Tab Spacing in Maximized Windows**
 
-## Tab dragging patch (optional, Windows)
+## Tab dragging patch (optional)
 
 Vivaldi positions tabs in its own model of fixed 180px tabs, which CSS can't change.
 With the equal-width tabs, dragging a tab drops it in the wrong slot. `safari-drag.js`
 fixes this by translating the cursor into Vivaldi's model while a tab is held.
 
 Vivaldi can't load JavaScript from the mods folder, so the script has to be added to
-Vivaldi's own `window.html`. To install it, double-click **`install-drag.bat`**
-(requires [PowerShell 7](https://aka.ms/powershell)), then restart Vivaldi.
+Vivaldi's own `window.html`. A Vivaldi update replaces that file, so run the patch
+again after each update. Restart Vivaldi after patching.
 
-A Vivaldi update installs a fresh copy without the patch. Run the script again after
-updating, or have it re-apply itself automatically:
+### Windows
+
+Double-click **`patch-vivaldi.bat`** (requires [PowerShell 7](https://aka.ms/powershell)).
+To have it re-apply itself after updates, or to undo it:
 
 ```powershell
-.\tools\install-drag.ps1 -Register             # also re-apply at logon and every 15 minutes
-.\tools\install-drag.ps1 -Remove -Unregister   # undo the patch and remove the task
+.\tools\patch-vivaldi.ps1 -Register             # also re-apply at logon and every 15 minutes
+.\tools\patch-vivaldi.ps1 -Remove -Unregister   # undo the patch and remove the task
 ```
 
 The script patches the per-user install in `%LOCALAPPDATA%\Vivaldi\Application`.
 For a system-wide install, pass `-ApplicationDir` and run it as administrator.
+
+### macOS (untested)
+
+In Terminal, from the repository folder:
+
+```bash
+sh patch-vivaldi.command                         # patch /Applications/Vivaldi.app
+sh patch-vivaldi.command --remove                # undo the patch
+sh patch-vivaldi.command --app ~/Applications/Vivaldi.app   # Vivaldi installed elsewhere
+```
+
+Running it with `sh` avoids the Gatekeeper prompt that double-clicking a downloaded
+`.command` file triggers. If it reports that it can't write to Vivaldi.app, prefix the
+command with `sudo`.
+
+Editing files inside Vivaldi.app invalidates the app's code signature, and how macOS
+reacts to that hasn't been checked. If Vivaldi refuses to start after patching, run
+the patch with `--remove` or reinstall Vivaldi.
 
 ## Known limitations
 
@@ -80,8 +101,9 @@ For a system-wide install, pass `-ApplicationDir` and run it as administrator.
 ## Uninstall
 
 Clear the folder under **Settings → Appearance → Custom UI Modifications**. If you
-installed the drag patch, run `install-drag.bat -Remove`, adding `-Unregister` if you
-registered the scheduled task. Then restart Vivaldi.
+installed the drag patch, run `patch-vivaldi.bat -Remove` (adding `-Unregister` if you
+registered the scheduled task) on Windows, or `sh patch-vivaldi.command --remove` on
+macOS. Then restart Vivaldi.
 
 ## License
 

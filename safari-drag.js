@@ -8,7 +8,8 @@
    (reordering, detaching, stacking). Horizontal tab bars only.
 
    It is not a Vivaldi mod: Vivaldi cannot load JavaScript from the CSS mods
-   folder, so tools/install-drag.ps1 adds it to Vivaldi's window.html. */
+   folder, so patch-vivaldi.bat (Windows) or patch-vivaldi.command (macOS) adds
+   it to Vivaldi's window.html. */
 (() => {
   'use strict';
 
