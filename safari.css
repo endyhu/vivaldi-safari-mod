@@ -33,8 +33,11 @@
   /* Not Safari-measured: gap between a tab's leading edge and its close
      button. */
   --tab-close-inset: 8px;
-  /* Not Safari-measured: gap between a tab's favicon and its alert badge. */
+  /* Not Safari-measured: gap between a tab's title and its audio button. */
   --tab-indicator-gap: 4px;
+  /* Not Safari-measured: shifts the alert badge so it is centered on the
+     favicon's top-right corner without being clipped by the tab's top edge. */
+  --tab-badge-offset: -50% -35%;
 }
 
 /* ADDRESS BAR: CENTERED
@@ -167,29 +170,20 @@
 
 /* Vivaldi lays the audio button and the alert badge out absolutely, relative
    to where the favicon sits when content is left-aligned. With centered
-   content that point moves, so they landed on top of the title. Both go back
-   in the flow instead, ahead of the title. */
-.tab:not(.pinned) .tab-header .favicon,
-.tab:not(.pinned) .tab-header .tab-audio {
-  order: -2;
-}
+   content that point moves, so they landed on top of the title. */
 
-.tab:not(.pinned) .tab-header .button-badge {
-  position: static;
-  order: -1;
-  margin-inline-start: var(--tab-indicator-gap);
-}
-
-/* While audio plays or is muted, Vivaldi shows the audio button in place of
-   the favicon (scaling the favicon to nothing), so it takes the favicon's
-   slot. Pinned and small tabs keep Vivaldi's own overlay for it. #browser and
-   the container IDs are there to outrank Vivaldi's own ID-based rules for the
-   tab strip and the stack sub-strip. */
+/* The audio button goes back in the flow, after the title, and the favicon
+   stays visible (Vivaldi would scale it to nothing while audio plays). Pinned
+   and small tabs keep Vivaldi's own overlay. #browser and the container IDs
+   outrank Vivaldi's ID-based rules for the tab strip and the stack sub-strip,
+   and .tab-wrapper and .tab-header outrank its class count for the favicon. */
 #browser
   :is(#tabs-container, #tabs-subcontainer)
+  .tab-wrapper
   .tab:not(.pinned, .tab-small):is(.audio-on, .audio-muted, .tab-captured)
+  .tab-header
   .favicon {
-  display: none;
+  transform: none;
 }
 
 #browser
@@ -198,4 +192,23 @@
   .tab-audio {
   position: static;
   flex: none;
+  margin-inline-start: var(--tab-indicator-gap);
+}
+
+/* The alert badge sits on the favicon's top-right corner, like a phone app
+   badge. Each tab scopes its own anchor name, so a badge finds its own
+   favicon. */
+.tab:not(.pinned) .tab-header {
+  anchor-scope: --tab-favicon;
+}
+
+.tab:not(.pinned) .tab-header .favicon {
+  anchor-name: --tab-favicon;
+}
+
+.tab:not(.pinned) .tab-header .button-badge {
+  position: absolute;
+  position-anchor: --tab-favicon;
+  inset: anchor(top) auto auto anchor(right);
+  translate: var(--tab-badge-offset);
 }
