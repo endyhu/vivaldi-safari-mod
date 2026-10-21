@@ -1,151 +1,71 @@
-/* Center url bar */
+/*
+ * safari.css — Safari 27 (macOS 27, Liquid Glass) styling for Vivaldi
+ *
+ * Target: Vivaldi 8.2.4133.89
+ * Loaded via vivaldi://experiments → "Allow for using CSS modifications",
+ * with the folder set under Settings → Appearance → Custom UI Modifications.
+ */
 
-#browser .mainbar {
-  height: 47px;
+/*
+ * REQUIRED VIVALDI SETTINGS
+ * Each entry: setting path → value (why CSS shouldn't do this instead).
+ *
+ * Settings → Tabs → Tab Bar Position → Top
+ *   (Safari's "Separate" layout: tab bar on its own row below the toolbar.)
+ * Settings → Address Bar → Address Bar Position → Top
+ *   (The centered field lives in the navigation toolbar above the tabs.)
+ */
+
+/* CUSTOM PROPERTIES
+   Every size, radius, spacing and timing value used below lives here. */
+:root {
+  /* Measured from a Safari 27 screenshot: pill ≈ 40% of window width. */
+  --address-bar-width: 40%;
+  /* Chosen by eye: 40% is too wide on an ultrawide display, 600px too small. */
+  --address-bar-max-width: 800px;
 }
 
-#browser .mainbar .toolbar-extensions {
-  margin-left: auto;
+/* ADDRESS BAR: CENTERED
+   The field is centered on the window and its URL text on the field. */
+
+/* Flex layout can only center the field between the toolbar buttons, which
+   sits off the window's center whenever the left and right button groups
+   differ in width. Absolute positioning centers on the toolbar itself.
+   Tradeoff: in windows narrower than ~500px the field overlaps the left
+   buttons, and that width grows with every button added on the left. */
+.toolbar-addressbar {
+  position: relative;
 }
 
-#browser .mainbar .UrlBar-AddressField {
+.toolbar-addressbar > .UrlBar-AddressField {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 33%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inset-block: 0;
+  /* Vertical auto margins center the field in the toolbar's height. */
+  margin: auto 0;
+  width: min(var(--address-bar-width), var(--address-bar-max-width));
+  min-width: 0;
 }
 
-#browser .mainbar .UrlBar-AddressField .UrlField {
-  display: flex;
-  justify-content: center;
+/* Taking the field out of the flow removes what pushed the right-hand buttons
+   to the edge; an auto margin on the first of them restores that. */
+.toolbar-addressbar > .UrlBar-AddressField + * {
+  margin-inline-start: auto;
 }
 
-#browser .mainbar .UrlBar-AddressField #urlFieldInput {
+/* Vivaldi draws the URL twice: the <input> while editing and an overlay of
+   styled fragments otherwise. Both are centered in the space between the
+   field's buttons, or the text would jump when the field gains focus. That
+   space is off the field's center by half the difference between the two
+   button groups; centering exactly would need padding CSS can't derive. */
+.toolbar-addressbar .UrlBar-UrlField {
   text-align: center;
 }
 
-/* Center bookmark bar */
-
-#browser .bookmark-bar {
-  height: 29px;
-}
-
-#browser .bookmark-bar .observer {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-/* Full-width tabs */
-
-#browser .tabbar-wrapper .resize {
-  margin: 0;
-  max-width: 100% !important;
-}
-
-#browser .tab-strip {
-  display: flex;
-}
-
-#browser .tab-strip span {
-  flex: 1;
-}
-
-#browser .tab-strip .tab-position {
-  --PositionX: initial !important;
-  --Width: initial !important;
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* Center tab header */
-
-#browser .tab-strip .tab-header {
-  justify-content: center;
-  width: 100%;
-  padding: 0 16px;
-}
-
-#browser .tab-strip .tab-header .favicon {
-  flex: initial;
-}
-
-#browser .tab-strip .tab-header .title {
-  flex: initial;
-  mask-image: initial;
-}
-
-#browser .tab-strip .tab-header .close {
-  position: absolute;
-  right: 0;
-}
-
-/* Don't hide favicon when audio button is visible */
-
-#browser:not(.alt-tabs)
-  #tabs-container
-  .tab:not(.pinned, .tab-small).audio-on
-  .favicon,
-#browser:not(.alt-tabs)
-  #tabs-container
-  .tab:not(.pinned, .tab-small).audio-muted
-  .favicon,
-#browser:not(.alt-tabs)
-  #tabs-container
-  .tab:not(.pinned, .tab-small).tab-captured
-  .favicon {
-  transform: scale(1);
-}
-
-/* Position audio button */
-
-#browser .tab-strip .tab-header .tab-audio {
-  position: initial !important;
-  flex: initial;
-}
-
-/* Position alert count badge */
-
-#browser .tab-strip .tab-header .button-badge {
-  position: initial !important;
-  flex: initial;
-}
-
-/* Remove tab bar spacing */
-
-#browser .toolbar-tabbar-before,
-#browser .toolbar-tabbar-after {
-  display: none;
-}
-
-/* Move tab bar below bookmark bar */
-
-#browser .tabbar-wrapper {
-  position: fixed;
-  top: 76px;
-  left: 0px;
-  overflow: hidden;
-  width: 100%;
-  height: 31px;
-}
-
-#browser .tabbar-wrapper #tabs-tabbar-container {
-  padding: 0;
-}
-
-#browser.tabs-off .tabbar-wrapper,
-#browser .tabbar-wrapper:has(.tab-strip > span:only-child) {
-  height: 0;
-}
-
-#browser .inner {
-  margin-top: 31px;
-}
-
-#browser.tabs-off .inner,
-#browser.fullscreen .inner,
-#browser:not(:has(footer .tabbar-wrapper)) .inner,
-#browser:has(.tab-strip > span:only-child) .inner {
-  margin-top: 0;
+.toolbar-addressbar .UrlBar-UrlField + .UrlFragments {
+  inset-inline: 0;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
 }
