@@ -16,6 +16,9 @@
  *   window buttons into the top toolbar.)
  * Settings → Address Bar → Address Bar Position → Top
  *   (The centered field lives in the navigation toolbar at the top.)
+ * Settings → Tabs → Tab Options → Display Close Button → On Left Side
+ *   (Vivaldi then swaps the favicon for the close button on hover, in the
+ *   flow, so a centered title stays put without any CSS.)
  * Settings → Bookmarks → Bookmark Bar Position → Top
  *   (With the bar shown, it sits directly below the address bar.)
  */
@@ -27,12 +30,9 @@
   --address-bar-width: 40%;
   /* Chosen by eye: 40% is too wide on an ultrawide display, 600px too small. */
   --address-bar-max-width: 800px;
-  /* Not Safari-measured: room on both sides of a tab's title for the close
-     button, kept symmetric so the title stays centered. */
+  /* Not Safari-measured: space between a tab's content and its edges, kept
+     symmetric so the title stays centered. */
   --tab-header-padding: 24px;
-  /* Not Safari-measured: gap between a tab's leading edge and its close
-     button. */
-  --tab-close-inset: 8px;
   /* Not Safari-measured: gap between a tab's title and its audio button. */
   --tab-indicator-gap: 4px;
   /* Not Safari-measured: shifts the alert badge so it is centered on the
@@ -175,13 +175,6 @@
   display: block;
   line-height: var(--Height);
   text-overflow: ellipsis;
-}
-
-/* Safari shows the close button at the leading edge on hover. It is taken out
-   of the flow so showing it doesn't shift the title. */
-.tab .tab-header .close {
-  position: absolute;
-  inset-inline-start: var(--tab-close-inset);
 }
 
 /* Vivaldi lays the audio button and the alert badge out absolutely, relative
