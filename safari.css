@@ -64,9 +64,18 @@
 }
 
 /* Taking the field out of the flow removes what pushed the right-hand buttons
-   to the edge; an auto margin on the first of them restores that. */
-.toolbar-addressbar > .UrlBar-AddressField + * {
-  margin-inline-start: auto;
+   to the edge. A flexible spacer, ordered between the buttons before and after
+   the field, restores that. An auto margin on the field's next sibling would
+   fail whenever that sibling is hidden (the extensions group without
+   extensions, or the update button). */
+.toolbar-addressbar::after {
+  content: "";
+  flex: 1 1 auto;
+  order: 1;
+}
+
+.toolbar-addressbar > .UrlBar-AddressField ~ * {
+  order: 2;
 }
 
 /* Vivaldi draws the URL twice: the <input> while editing and an overlay of
