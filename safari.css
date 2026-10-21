@@ -27,6 +27,9 @@
   --address-bar-width: 40%;
   /* Chosen by eye: 40% is too wide on an ultrawide display, 600px too small. */
   --address-bar-max-width: 800px;
+  /* Not Safari-measured: room on both sides of a tab's title for the close
+     button, kept symmetric so the title stays centered. */
+  --tab-header-padding: 24px;
 }
 
 /* ADDRESS BAR: CENTERED
@@ -93,4 +96,57 @@
 /* The page goes last; the toolbar, bookmark bar and tab bar keep DOM order. */
 #main > .inner {
   order: 1;
+}
+
+/* TABS: EQUAL WIDTH, CENTERED
+   Safari's tabs split the whole bar equally, with each title centered. */
+
+/* Vivaldi sizes the tab area to the sum of its tabs, writing the limit inline
+   (max-width: 180px for one tab). !important is needed to beat that inline
+   style. */
+#tabs-container .resize {
+  max-width: none !important;
+  min-width: 0;
+}
+
+/* Without min-width: 0 the strip never shrinks below its tabs' content width
+   and runs off the bar once there are many tabs. */
+.tab-strip {
+  display: flex;
+  min-width: 0;
+}
+
+/* Vivaldi places each tab absolutely, from custom properties its script
+   writes inline. Resetting them to the guaranteed-invalid value makes its
+   transform, width and max-width rules drop out so flex can size the tabs.
+   !important is needed to beat the inline style. */
+.tab-strip .tab-position {
+  --PositionX: initial !important;
+  --PositionY: initial !important;
+  --Width: initial !important;
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.tab .tab-header {
+  justify-content: center;
+  padding-inline: var(--tab-header-padding);
+}
+
+/* Vivaldi stretches the title and fades its end with a mask, which would fade
+   the last letters of a short, centered title. Ellipsis replaces it. */
+.tab .tab-header .title:not(.editing) {
+  flex: 0 1 auto;
+  margin-right: 0;
+  mask-image: none;
+  display: block;
+  line-height: var(--Height);
+  text-overflow: ellipsis;
+}
+
+/* Taken out of the flow so showing it on hover doesn't shift the title. */
+.tab .tab-header .close {
+  position: absolute;
+  inset-inline-end: 0;
 }
