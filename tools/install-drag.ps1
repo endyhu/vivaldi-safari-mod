@@ -5,7 +5,10 @@
 #
 #   .\tools\install-drag.ps1              apply to every installed Vivaldi version
 #   .\tools\install-drag.ps1 -Register    also re-apply at logon and every 15 minutes
-#   .\tools\install-drag.ps1 -Remove      undo the edit (and -Unregister the task)
+#   .\tools\install-drag.ps1 -Remove      undo the edit
+#   .\tools\install-drag.ps1 -Remove -Unregister   undo the edit and remove the task
+#
+# install-drag.bat in the repo root runs this script with the same arguments.
 #
 # Restart Vivaldi afterwards: window.html is read when a window opens.
 
