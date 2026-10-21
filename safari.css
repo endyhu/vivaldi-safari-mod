@@ -33,6 +33,8 @@
   /* Not Safari-measured: gap between a tab's leading edge and its close
      button. */
   --tab-close-inset: 8px;
+  /* Not Safari-measured: gap between a tab's favicon and its alert badge. */
+  --tab-indicator-gap: 4px;
 }
 
 /* ADDRESS BAR: CENTERED
@@ -126,20 +128,28 @@
 .tab-strip .tab-position {
   --PositionX: initial !important;
   --PositionY: initial !important;
-  --Width: initial !important;
   position: relative;
   flex: 1 1 0;
   min-width: 0;
 }
 
-.tab .tab-header {
+.tab-strip .tab-position:not(:has(.tab.pinned)) {
+  --Width: initial !important;
+}
+
+/* Pinned tabs stay at the width Vivaldi gives them, not an equal share. */
+.tab-strip .tab-position:has(.tab.pinned) {
+  flex: none;
+}
+
+.tab:not(.pinned) .tab-header {
   justify-content: center;
   padding-inline: var(--tab-header-padding);
 }
 
 /* Vivaldi stretches the title and fades its end with a mask, which would fade
    the last letters of a short, centered title. Ellipsis replaces it. */
-.tab .tab-header .title:not(.editing) {
+.tab:not(.pinned) .tab-header .title:not(.editing) {
   flex: 0 1 auto;
   margin-right: 0;
   mask-image: none;
@@ -153,4 +163,39 @@
 .tab .tab-header .close {
   position: absolute;
   inset-inline-start: var(--tab-close-inset);
+}
+
+/* Vivaldi lays the audio button and the alert badge out absolutely, relative
+   to where the favicon sits when content is left-aligned. With centered
+   content that point moves, so they landed on top of the title. Both go back
+   in the flow instead, ahead of the title. */
+.tab:not(.pinned) .tab-header .favicon,
+.tab:not(.pinned) .tab-header .tab-audio {
+  order: -2;
+}
+
+.tab:not(.pinned) .tab-header .button-badge {
+  position: static;
+  order: -1;
+  margin-inline-start: var(--tab-indicator-gap);
+}
+
+/* While audio plays or is muted, Vivaldi shows the audio button in place of
+   the favicon (scaling the favicon to nothing), so it takes the favicon's
+   slot. Pinned and small tabs keep Vivaldi's own overlay for it. #browser and
+   the container IDs are there to outrank Vivaldi's own ID-based rules for the
+   tab strip and the stack sub-strip. */
+#browser
+  :is(#tabs-container, #tabs-subcontainer)
+  .tab:not(.pinned, .tab-small):is(.audio-on, .audio-muted, .tab-captured)
+  .favicon {
+  display: none;
+}
+
+#browser
+  :is(#tabs-container, #tabs-subcontainer)
+  .tab:not(.pinned, .tab-small):is(.audio-on, .audio-muted, .tab-captured)
+  .tab-audio {
+  position: static;
+  flex: none;
 }
