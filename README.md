@@ -12,7 +12,8 @@ macOS one hasn't been tested on a real Mac yet.
 
 - **Centered address bar**: the field is centered on the window (40% of its width,
   up to 800px), and its URL text is centered in the field.
-- **Centered bookmark bar**, as Safari's favorites bar.
+- **Centered bookmark bar**, as Safari's favorites bar, with a slightly taller bar
+  and roomier bookmarks so they are easier to click.
 - **Separate-style tab bar**: below the bookmark bar, flush with the window edges.
 - **Equal-width tabs** that fill the bar, with centered titles, joined with square
   corners and hairline separators, and rounded again on hover.

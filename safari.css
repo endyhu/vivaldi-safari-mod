@@ -46,6 +46,12 @@
      The theme's own faded foreground variables were too bright (the fully
      opaque one) or too faint (the alpha one, 10%). */
   --tab-separator-opacity: 30%;
+  /* Not Safari-measured: Vivaldi's bar is 29px (28px + 1px border). A few
+     pixels taller makes each bookmark an easier target without a bulky bar. */
+  --bookmark-bar-height: 33px;
+  /* Not Safari-measured: space inside a bookmark, between its edge and its icon
+     or title. Vivaldi has 6px, so neighbouring bookmarks sat tight. */
+  --bookmark-padding-inline: 10px;
 }
 
 /* ADDRESS BAR: CENTERED
@@ -107,6 +113,22 @@
    absolutely positioned at the right edge, so it is unaffected. */
 .bookmark-bar > .observer {
   justify-content: center;
+}
+
+/* BOOKMARK BAR: LARGER TARGETS
+   Bookmarks are buttons that already fill the bar's height and touch each
+   other, so the hit area grows by making the bar taller and each button wider.
+   The selector matches Vivaldi's height rule for a top bar, which the required
+   settings assume. */
+.bookmark-bar-top .bookmark-bar {
+  height: var(--bookmark-bar-height);
+}
+
+/* Vivaldi's 6px start gap comes from the flex gap after an empty ::before
+   item, so the start padding only tops it up to the end padding's size. */
+.bookmark-bar button:not(.chevron) {
+  padding-inline-start: calc(var(--bookmark-padding-inline) - 6px);
+  padding-inline-end: var(--bookmark-padding-inline);
 }
 
 /* TAB BAR: BELOW BOOKMARKS
